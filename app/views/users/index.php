@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Directory</title>
-  <link rel="stylesheet" href="<?=base_url();?>public/style.css">
+  <link rel="stylesheet" href="<?=base_url();?>/public/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
@@ -25,24 +25,17 @@
         <h1 class="text-2xl font-semibold text-gray-800">👥 User Directory</h1>
 
      <!-- Search Bar -->
-<form method="get" action="<?=site_url()?>" class="flex items-center space-x-2">
-  <div class="relative">
-    <input 
-      type="text" 
-      name="q" 
-      value="<?=html_escape($_GET['q'] ?? '')?>" 
-      placeholder="Search student..." 
-      class="w-64 px-4 py-2 border border-gray-300 rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
-    <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-      <i class="fa fa-search"></i>
-    </span>
-  </div>
-  <button type="submit" 
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition duration-200">
-    Search
+<form method="get" action="<?=site_url()?>" class="search-bar">
+  <input 
+    type="text" 
+    name="q" 
+    value="<?=html_escape($_GET['q'] ?? '')?>" 
+    placeholder="Search student..." 
+    class="search-input">
+  <button type="submit" class="search-btn">
+    <i class="fa fa-search"></i>
   </button>
 </form>
-
       </div>
       
     
@@ -89,22 +82,12 @@
         </table>
       </div>
 
-     <!-- Pagination -->
-<div class="mt-6 flex justify-center">
-  <div class="inline-flex items-center space-x-2">
-    <?= str_replace(
-          ['<a', '<strong', '<span', '</a>', '</strong>', '</span>'],
-          [
-            '<a class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-blue-600 hover:text-white transition"',
-            '<span class="px-3 py-1 rounded-md border border-blue-600 bg-blue-600 text-white font-semibold"',
-            '<span class="px-3 py-1 rounded-md border border-gray-300 bg-gray-100 text-gray-500"',
-            '</a>', '</span>', '</span>'
-          ],
-          $page ?? ''
-        ) ?>
+      <!-- Pagination -->
+<div class="mt-4 flex justify-center">
+  <div class="pagination flex space-x-2">
+      <?=$page ?? ''?>
   </div>
 </div>
-
 
       <!-- Button -->
       <div class="mt-6 text-right">
