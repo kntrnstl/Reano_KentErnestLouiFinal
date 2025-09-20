@@ -23,7 +23,22 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-gray-800">👥 User Directory</h1>
+
+     <!-- Search Bar -->
+<form method="get" action="<?=site_url()?>" class="search-bar">
+  <input 
+    type="text" 
+    name="q" 
+    value="<?=html_escape($_GET['q'] ?? '')?>" 
+    placeholder="Search student..." 
+    class="search-input">
+  <button type="submit" class="search-btn">
+    <i class="fa fa-search"></i>
+  </button>
+</form>
       </div>
+      
+    
 
       <!-- Table -->
       <div class="overflow-x-auto rounded-xl border border-gray-200">
@@ -66,6 +81,13 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+<div class="mt-4 flex justify-center">
+  <div class="pagination flex space-x-2">
+      <?=$page ?? ''?>
+  </div>
+</div>
 
       <!-- Button -->
       <div class="mt-6 text-right">
