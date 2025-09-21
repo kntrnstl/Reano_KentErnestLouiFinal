@@ -35,8 +35,8 @@ class Usersmodel extends Model {
 
             if (!empty($q)) {
                 $query
-                      ->or_like('last_name', '%'.$q.'%')
-                      ->like('first_name', '%'.$q.'%')
+                      ->like('last_name', '%'.$q.'%')
+                      ->or_like('first_name', '%'.$q.'%')
                       ->or_like('email', '%'.$q.'%');
             }
 
