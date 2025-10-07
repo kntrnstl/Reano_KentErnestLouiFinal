@@ -32,7 +32,7 @@ class UsersController extends Controller {
         $page = isset($_GET['page']) ? $this->io->get('page') : 1;
         $q    = isset($_GET['q']) && !empty($_GET['q']) ? trim($this->io->get('q')) : '';
 
-        $records_per_page = 5;
+        $records_per_page = 10;
         $users = $this->UsersModel->page($q, $records_per_page, $page);
 
         $data['users'] = $users['records'];
@@ -93,64 +93,72 @@ class UsersController extends Controller {
 
 
     public function update($id)
-    {
-        $this->call->model('UsersModel');
-        $this->check_login();
+{
+    $this->call->model('UsersModel');
+    $this->check_login();
 
-        $logged_in_user = $_SESSION['user'];
+    $logged_in_user = $_SESSION['user'];
 
-        $user = $this->UsersModel->get_user_by_id($id);
-        if (!$user) {
-            echo "User not found.";
-            return;
-        }
+    $user = $this->UsersModel->get_user_by_id($id);
+    if (!$user) {
+        echo "User not found.";
+        return;
+    }
 
-        // Restrict normal users to edit only their own account
-        if ($logged_in_user['role'] !== 'admin' && $logged_in_user['id'] != $id) {
-            echo "You are not allowed to edit other users.";
-            return;
-        }
+    // Restrict normal users to edit only their own account
+    if ($logged_in_user['role'] !== 'admin' && $logged_in_user['id'] != $id) {
+        echo "You are not allowed to edit other users.";
+        return;
+    }
 
-        if ($this->io->method() === 'post') {
-            $username = $this->io->post('username');
-            $email    = $this->io->post('email');
+    if ($this->io->method() === 'post') {
+        $username = $this->io->post('username');
+        $email    = $this->io->post('email');
 
-            if ($logged_in_user['role'] === 'admin') {
-                $role = $this->io->post('role');
-                $password = $this->io->post('password');
+        if ($logged_in_user['role'] === 'admin') {
+            $role = $this->io->post('role');
+            $password = $this->io->post('password');
 
-                // Validate role
-                $allowed_roles = ['admin', 'user'];
-                if (!in_array($role, $allowed_roles)) $role = 'user';
+            // Validate role
+            $allowed_roles = ['admin', 'user'];
+            if (!in_array($role, $allowed_roles)) $role = 'user';
 
-                $data = [
-                    'username' => $username,
-                    'email'    => $email,
-                    'role'     => $role
-                ];
+            $data = [
+                'username' => $username,
+                'email'    => $email,
+                'role'     => $role
+            ];
 
-                if (!empty($password)) {
-                    $data['password'] = password_hash($password, PASSWORD_BCRYPT);
-                }
-            } else {
-                // Normal user cannot change role or password
-                $data = [
-                    'username' => $username,
-                    'email'    => $email
-                ];
-            }
-
-            if ($this->UsersModel->update($id, $data)) {
-                redirect('/users');
-            } else {
-                echo 'Failed to update user.';
+            if (!empty($password)) {
+                $data['password'] = password_hash($password, PASSWORD_BCRYPT);
             }
         } else {
-            $data['user'] = $user;
-            $data['logged_in_user'] = $logged_in_user;
-            $this->call->view('users/update', $data);
+            // Normal user cannot change role or password
+            $data = [
+                'username' => $username,
+                'email'    => $email
+            ];
         }
+
+        if ($this->UsersModel->update($id, $data)) {
+
+            // ✅ Refresh session if the logged-in user updated their own account
+            if ($logged_in_user['id'] == $id) {
+                $updated_user = $this->UsersModel->get_user_by_id($id);
+                $_SESSION['user'] = $updated_user;
+            }
+
+            redirect('/users');
+        } else {
+            echo 'Failed to update user.';
+        }
+    } else {
+        $data['user'] = $user;
+        $data['logged_in_user'] = $logged_in_user;
+        $this->call->view('users/update', $data);
     }
+}
+
 
     public function delete($id)
     {
@@ -240,7 +248,7 @@ class UsersController extends Controller {
         $page = isset($_GET['page']) ? $this->io->get('page') : 1;
         $q    = isset($_GET['q']) && !empty($_GET['q']) ? trim($this->io->get('q')) : '';
 
-        $records_per_page = 5;
+        $records_per_page = 10;
         $user = $this->UsersModel->page($q, $records_per_page, $page);
 
         $data['user'] = $user['records'];

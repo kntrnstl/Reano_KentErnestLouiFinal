@@ -11,11 +11,73 @@ if (!isset($logged_in_user)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create User</title>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-blue-600 to-cyan-400 min-h-screen flex items-center justify-center font-sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
-    <h1 class="text-2xl font-semibold text-center text-blue-600 mb-6">Create User</h1>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e3a8a, #1e40af);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: #e2e8f0;
+      animation: fadeIn 1s ease;
+    }
+    .form-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 0.8s ease;
+      color: #e2e8f0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    input, select {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+    }
+    input::placeholder {
+      color: #94a3b8;
+    }
+    select option {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    button {
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.02);
+    }
+
+    /* Eye icon */
+    .toggle-eye {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #60a5fa;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+    .toggle-eye:hover {
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-card p-8 rounded-2xl w-full max-w-md">
+    <h1 class="text-2xl font-semibold text-center text-blue-400 mb-6">Create User</h1>
 
     <form id="user-form" action="<?=site_url('users/create/')?>" method="POST" class="space-y-4">
 
@@ -23,31 +85,28 @@ if (!isset($logged_in_user)) {
       <div>
         <input type="text" name="username" placeholder="Username" required
                value="<?= isset($username) ? html_escape($username) : '' ?>"
-               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800">
+               class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400">
       </div>
 
       <!-- Email -->
       <div>
         <input type="email" name="email" placeholder="Email" required
                value="<?= isset($email) ? html_escape($email) : '' ?>"
-               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800">
+               class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400">
       </div>
 
       <!-- Password with toggle -->
       <div class="relative">
         <input type="password" name="password" id="password" placeholder="Password" required
-               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800">
-        <button type="button" id="togglePassword"
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-blue-600 focus:outline-none">
-          <i class="fa-solid fa-eye"></i>
-        </button>
+               class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400">
+        <i class="fa-solid fa-eye toggle-eye" id="togglePassword"></i>
       </div>
 
       <!-- Role -->
       <?php if($logged_in_user['role'] === 'admin'): ?>
         <div>
           <select name="role" required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-800">
+                  class="w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="" disabled selected>Select Role</option>
             <option value="user">User</option>
             <option value="admin">Admin</option>
@@ -59,46 +118,27 @@ if (!isset($logged_in_user)) {
 
       <!-- Submit -->
       <button type="submit"
-              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-md transition duration-200">
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-md">
         Create User
       </button>
     </form>
 
     <!-- Return Button -->
-     <a href="<?=site_url('/users');?>" class="mt-4 block text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-xl shadow transition">
+    <a href="<?=site_url('/users');?>" class="mt-4 block text-center bg-slate-800 hover:bg-slate-700 text-blue-400 py-2 rounded-xl shadow border border-slate-700">
       Return to Home
     </a>
   </div>
 
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn {
-      animation: fadeIn 0.8s ease;
-    }
-  </style>
-
-  <!-- FontAwesome for password icon -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
-
-  <!-- Password Toggle -->
+  <!-- Password Toggle Script -->
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const togglePassword = document.getElementById('togglePassword');
-      const password = document.getElementById('password');
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordField = document.getElementById("password");
 
-      if (togglePassword && password) {
-        togglePassword.addEventListener('click', function () {
-          const type = password.type === 'password' ? 'text' : 'password';
-          password.type = type;
-
-          const icon = this.querySelector("i");
-          icon.classList.toggle("fa-eye");
-          icon.classList.toggle("fa-eye-slash");
-        });
-      }
+    togglePassword.addEventListener("click", () => {
+      const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+      passwordField.setAttribute("type", type);
+      togglePassword.classList.toggle("fa-eye");
+      togglePassword.classList.toggle("fa-eye-slash");
     });
   </script>
 
