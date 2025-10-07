@@ -130,9 +130,11 @@
             value="<?=html_escape($_GET['q'] ?? '')?>" 
             placeholder="Search user..." 
             class="w-full border border-slate-700 bg-slate-800 rounded-l-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100 transition">
-          <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-5 rounded-r-xl transition">
-            Search
-          </button>
+          <button 
+    type="submit" 
+    class="bg-blue-700 hover:bg-blue-800 text-white px-5 rounded-r-xl transition text-lg flex items-center justify-center">
+    🔍  </button>
+
         </form>
       </div>
       
